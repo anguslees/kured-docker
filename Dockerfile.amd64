@@ -1,0 +1,39 @@
+FROM golang:1.10.3-alpine AS builder
+
+RUN apk -U add git wget ca-certificates
+
+RUN \
+  wget -O /usr/local/bin/dep https://github.com/golang/dep/releases/download/v0.5.0/dep-linux-amd64 && \
+  chmod +x /usr/local/bin/dep
+
+ENV CGO_ENABLED=0
+ENV GOOS=linux GOARCH=amd64
+ENV VERSION=1.0
+ENV GIT_COMMIT=5731b98a8aa2780afb03e47d3dabfb385ba58151
+
+RUN \
+  git clone https://github.com/weaveworks/kured.git /go/src/github.com/weaveworks/kured && \
+  cd /go/src/github.com/weaveworks/kured && git checkout $GIT_COMMIT
+
+RUN cd /go/src/github.com/weaveworks/kured && dep ensure
+RUN go build -ldflags "-s -X main.version=$VERSION-$(echo $GIT_COMMIT | cut -c -8)" -o /kured github.com/weaveworks/kured/cmd/kured
+
+FROM alpine:3.8 AS fetcher
+
+RUN apk -U add wget ca-certificates dbus
+RUN \
+ wget -O /kubectl https://storage.googleapis.com/kubernetes-release/release/v1.10.3/bin/linux/amd64/kubectl && \
+ chmod +x /kubectl
+
+COPY systemctl.sh /tmp
+RUN install -m 0755 -o root -g root /tmp/systemctl.sh /bin/systemctl
+
+FROM alpine:3.8
+COPY --from=fetcher /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+COPY --from=fetcher /kubectl /usr/bin/
+COPY --from=fetcher /usr/lib/libdbus-1.so.3 /usr/lib/
+COPY --from=fetcher /usr/bin/dbus-send /usr/bin/
+COPY --from=fetcher /bin/systemctl /bin/
+COPY --from=builder /kured /usr/bin/
+
+ENTRYPOINT ["/usr/bin/kured"]
