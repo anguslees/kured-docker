@@ -3,7 +3,7 @@
 
 case "$1" in
     reboot)
-        dbus-send --system --dest=org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager.Reboot boolean:false
+        dbus-send --system --print-reply --dest=org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager.Reboot boolean:false
         ;;
     *)
         echo "Unimplemented subcommand '$1'" >&2
