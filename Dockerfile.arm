@@ -1,4 +1,4 @@
-FROM golang:1.10.3-alpine@sha256:499b775c0954ce029c9db806c4543524b38eeb38bc5588c3ea81bb135f8c55db AS builder
+FROM golang:1.16.5-alpine@sha256:45f32e963bb3cc408cfcd01a8e76b2872fb238f602ec5481cd75393da29369c0 AS builder
 
 RUN apk -U add git wget ca-certificates
 
@@ -28,9 +28,9 @@ RUN \
 COPY systemctl.sh /tmp
 RUN install -m 0755 -o root -g root /tmp/systemctl.sh /bin/systemctl
 
-FROM arm32v6/alpine:3.8@sha256:dabea2944dcc2b86482b4f0b0fb62da80e0673e900c46c0e03b45919881a5d84 AS alpine-armhf
+FROM arm32v6/alpine:3.14@sha256:1f66b8f3041ef8575260056dedd437ed94e7bfeea142ee39ff0d795f94ff2287 AS alpine-armhf
 
-FROM alpine:3.8@sha256:2bb501e6173d9d006e56de5bce2720eb06396803300fe1687b58a7ff32bf4c14 AS cross-fetch
+FROM alpine:3.14@sha256:234cb88d3020898631af0ccbbcca9a66ae7306ecd30c9720690858c1b007d2a0 AS cross-fetch
 
 RUN \
  mkdir /target && \
@@ -44,7 +44,7 @@ RUN \
  apk --root /target -U --keys-dir /etc/apk/keys add --arch armhf --initdb --no-script \
  dbus
 
-FROM arm32v6/alpine:3.8@sha256:dabea2944dcc2b86482b4f0b0fb62da80e0673e900c46c0e03b45919881a5d84
+FROM arm32v6/alpine:3.14@sha256:1f66b8f3041ef8575260056dedd437ed94e7bfeea142ee39ff0d795f94ff2287
 COPY --from=fetcher /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=fetcher /kubectl /usr/bin/
 COPY --from=cross-fetch /target/usr/lib/libdbus-1.so.3 /usr/lib/
