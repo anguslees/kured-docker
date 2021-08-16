@@ -30,7 +30,7 @@ RUN install -m 0755 -o root -g root /tmp/systemctl.sh /bin/systemctl
 
 FROM arm32v6/alpine:3.14@sha256:1f66b8f3041ef8575260056dedd437ed94e7bfeea142ee39ff0d795f94ff2287 AS alpine-armhf
 
-FROM alpine:3.14@sha256:adab3844f497ab9171f070d4cae4114b5aec565ac772e2f2579405b78be67c96 AS cross-fetch
+FROM alpine:3.14@sha256:eb3e4e175ba6d212ba1d6e04fc0782916c08e1c9d7b45892e9796141b1d379ae AS cross-fetch
 
 RUN \
  mkdir /target && \
