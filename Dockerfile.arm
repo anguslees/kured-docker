@@ -1,4 +1,4 @@
-FROM golang:1.16.7-alpine@sha256:3e6a2def9a57f23344a75bd71d9cd79726f0fbaf4b75330be5669773df0e9d4c AS builder
+FROM golang:1.16.7-alpine@sha256:17166aea7c42389cbd008ce3cf7a31e9c0a2de8fcbd78fa75a42dbef5a6c1d13 AS builder
 
 RUN apk -U add git wget ca-certificates
 
