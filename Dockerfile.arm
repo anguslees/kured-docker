@@ -28,7 +28,7 @@ RUN \
 COPY systemctl.sh /tmp
 RUN install -m 0755 -o root -g root /tmp/systemctl.sh /bin/systemctl
 
-FROM arm32v6/alpine:3.14@sha256:18c29393a090ba5cde8a5f00926e9e419f47cfcfd206cc3f7f590e91b19adfe9 AS alpine-armhf
+FROM arm32v6/alpine:3.14@sha256:07bf76961aa4c7d4b6648087563dc15d5374e1ca10b16f1643d70c6d7d541ee6 AS alpine-armhf
 
 FROM alpine:3.14@sha256:e1c082e3d3c45cccac829840a25941e679c25d438cc8412c2fa221cf1a824e6a AS cross-fetch
 
@@ -44,7 +44,7 @@ RUN \
  apk --root /target -U --keys-dir /etc/apk/keys add --arch armhf --initdb --no-script \
  dbus
 
-FROM arm32v6/alpine:3.14@sha256:18c29393a090ba5cde8a5f00926e9e419f47cfcfd206cc3f7f590e91b19adfe9
+FROM arm32v6/alpine:3.14@sha256:07bf76961aa4c7d4b6648087563dc15d5374e1ca10b16f1643d70c6d7d541ee6
 COPY --from=fetcher /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=fetcher /kubectl /usr/bin/
 COPY --from=cross-fetch /target/usr/lib/libdbus-1.so.3 /usr/lib/
