@@ -18,7 +18,7 @@ RUN \
 RUN cd /go/src/github.com/weaveworks/kured && dep ensure
 RUN go build -ldflags "-s -X main.version=$VERSION-$(echo $GIT_COMMIT | cut -c -8)" -o /kured github.com/weaveworks/kured/cmd/kured
 
-FROM alpine@sha256:e1c082e3d3c45cccac829840a25941e679c25d438cc8412c2fa221cf1a824e6a AS fetcher
+FROM alpine@sha256:a8560b36e8b8210634f77d9f7f9efd7ffa463e380b75e2e74aff4511df3ef88c AS fetcher
 
 RUN apk -U add wget ca-certificates
 RUN \
