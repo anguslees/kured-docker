@@ -18,7 +18,7 @@ RUN \
 RUN cd /go/src/github.com/weaveworks/kured && dep ensure
 RUN go build -ldflags "-s -X main.version=$VERSION-$(echo $GIT_COMMIT | cut -c -8)" -o /kured github.com/weaveworks/kured/cmd/kured
 
-FROM alpine:3.15@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454 AS fetcher
+FROM alpine:3.15@sha256:19b4bcc4f60e99dd5ebdca0cbce22c503bbcff197549d7e19dab4f22254dc864 AS fetcher
 
 RUN apk -U add wget ca-certificates dbus
 RUN \
@@ -28,7 +28,7 @@ RUN \
 COPY systemctl.sh /tmp
 RUN install -m 0755 -o root -g root /tmp/systemctl.sh /bin/systemctl
 
-FROM alpine:3.15@sha256:4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454
+FROM alpine:3.15@sha256:19b4bcc4f60e99dd5ebdca0cbce22c503bbcff197549d7e19dab4f22254dc864
 COPY --from=fetcher /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=fetcher /kubectl /usr/bin/
 COPY --from=fetcher /usr/lib/libdbus-1.so.3 /usr/lib/
